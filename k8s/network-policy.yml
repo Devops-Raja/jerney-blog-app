@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-frontend-only
+  namespace: jerney
+spec:
+  # 1. Target the backend application pods
+  podSelector:
+    matchLabels:
+      app: jerney-backend
+  
+  policyTypes:
+    - Ingress
+
+  # 2. Whitelist: Only allow traffic from the frontend pods
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: jerney-frontend
+      ports:
+        - protocol: TCP
+          port: 5000 # The internal network port your Node.js backend runs on
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-allow-backend-only
+  namespace: jerney
+spec:
+  # 1. Target the PostgreSQL database pod
+  podSelector:
+    matchLabels:
+      app: postgres
+  
+  policyTypes:
+    - Ingress
+
+  # 2. Whitelist: Only allow traffic from the backend pods
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: jerney-backend
+      ports:
+        - protocol: TCP
+          port: 5432 # The standard PostgreSQL port

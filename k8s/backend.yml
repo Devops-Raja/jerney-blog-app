@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jerney-backend
-  namespace: jerney 
+  namespace: jerney
 spec:
   replicas: 2
   selector:
@@ -14,21 +14,20 @@ spec:
         app: jerney-backend
     spec:
       securityContext:
-        runAsNonRoot: true        # Enforces that the container cannot run as UID 0 (root)
-        runAsUser: 1000           # 1000 is the default non-root 'node' user built into official Node images
+        runAsNonRoot: true # Enforces that the container cannot run as UID 0 (root)
+        runAsUser: 1000 # 1000 is the default non-root 'node' user built into official Node images
         runAsGroup: 1000
         fsGroup: 1000
-
       containers:
         - name: backend
-          image: ram7800/jerney-backend:{{github.run_number}} # Update this to your Docker Hub username and image tag
+          image: ram7800/jerney-backend:b53 # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000
               name: http-api
           securityContext:
             allowPrivilegeEscalation: false # Stops child processes from gaining root execution traits
-            readOnlyRootFilesystem: true   # Turns your app directory read-only to stop malicious payload injects
+            readOnlyRootFilesystem: true # Turns your app directory read-only to stop malicious payload injects
             capabilities:
               drop:
                 - ALL
@@ -44,7 +43,6 @@ spec:
               port: 5000
             initialDelaySeconds: 15
             periodSeconds: 20
-            
           resources:
             limits:
               cpu: "500m"
@@ -69,4 +67,13 @@ spec:
     - port: 5000
   selector:
     app: jerney-backend
+  template:
+    spec:
+      containers:
+        - image: ram7800/jerney-backend:b53
 ---
+spec:
+  template:
+    spec:
+      containers:
+        - image: ram7800/jerney-backend:b53

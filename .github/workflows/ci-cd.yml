@@ -136,26 +136,21 @@ jobs:
   iac-security-scan:
     name: "Stage 5: Infrastructure as Code (IaC) Scan"
     needs: security-lint-sca
-    continue-on-error: true # Hard-fails if any manifest contains critical security misconfigurations
     runs-on: ubuntu-latest
     steps: 
       - name: "Checkout Codebase"
         uses: actions/checkout@v4
 
-      # Scans your k8s/frontend.yml, backend.yml, and network policies for runtime security leaks
       - name: "Run Checkov Static Analysis"
-       
-        run: |
-           with:
-            args: >
-             -d k8s/ 
-             --framework kubernetes 
-              --output sarif 
-              --soft-fail false 
-              --no-config
-         # pip install --upgrade checkov
-          #checkov -d k8s/ --framework kubernetes --config-file .checkov.yml --output sarif --soft-fail false
- 
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: k8s/
+          framework: kubernetes
+          soft_fail: false
+          # This is the key: forcing the action to look at a non-existent 
+          # or clean file prevents the parser from reading your root .checkov.yml
+          config_file: /dev/null
+          
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

@@ -21,7 +21,7 @@ spec:
 
       containers:
         - name: backend
-          image: ram7800/jerney-backend:v1
+          image: ram7800/jerney-backend:latest # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000

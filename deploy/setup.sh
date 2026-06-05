@@ -51,7 +51,23 @@ sudo mkdir -p /var/www/jerney
 sudo chown -R $USER:$USER /var/www/jerney
 
 # Copy project files (assumes you've transferred them to ~/Jerney)
-cp -r ~/Jerney/* /var/www/jerney/
+cp -r ~/jerney-blog-app/* /var/www/jerney/
+
+### writing .env files in the script for local demo deployment ###
+echo "📝 Generating production configuration file..."
+cat <<EOF > /var/www/jerney/backend/.env
+NODE_ENV=production
+PORT=5000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=jerney_user
+DB_PASSWORD=jerney_pass_2026
+DB_NAME=jerney_db
+DATABASE_URL=postgres://jerney_user:jerney_pass_2026@localhost:5432/jerney_db
+EOF
+
+# Lock down file permissions so only your app can read it
+chmod 600 /var/www/jerney/backend/.env
 
 # --- Install backend dependencies ---
 echo "📦 Installing backend dependencies..."

@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jerney-backend
+  namespace: jerney
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jerney-backend
+  template:
+    metadata:
+      labels:
+        app: jerney-backend
+    spec:
+      securityContext:
+        runAsNonRoot: true # Enforces that the container cannot run as UID 0 (root)
+        runAsUser: 1000 # 1000 is the default non-root 'node' user built into official Node images
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: backend
+          image: ram7800/jerney-backend:b72 # Update this to your Docker Hub username and image tag
+          command: ["node", "src/index.js"]
+          ports:
+            - containerPort: 5000
+              name: http-api
+          securityContext:
+            allowPrivilegeEscalation: false # Stops child processes from gaining root execution traits
+            readOnlyRootFilesystem: true # Turns your app directory read-only to stop malicious payload injects
+            capabilities:
+              drop:
+                - ALL
+          readinessProbe:
+            httpGet:
+              path: /api/health # Ensure your Express/Node app has this route configured!
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          envFrom:
+            - configMapRef:
+                name: jerney-config
+            - secretRef:
+                name: jerney-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: jerney # 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+  selector:
+    app: jerney-backend
+  template:
+    spec:
+      containers:
+        - image: ram7800/jerney-backend:b72
+---
+spec:
+  template:
+    spec:
+      containers:
+        - image: ram7800/jerney-backend:b72

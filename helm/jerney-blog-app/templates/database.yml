@@ -1,0 +1,111 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: jerney-ebs-sc
+provisioner: ebs.csi.eks.amazonaws.com
+parameters:
+  type: gp3
+  encrypted: "true"
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: jerney
+spec:
+  clusterIP: None # Headless service keeps network identities stable
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: jerney
+spec:
+  serviceName: "postgres-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: jerney-config
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jerney-secret
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jerney-secret
+                  key: DB_PASSWORD
+          ports:
+            - containerPort: 5432
+              name: postgres
+          # ─── DEVSECOPS BLOCK 3: VOLUMES & READ-ONLY BYPASSES ───
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data  # The physical block disk from AWS EBS
+            - name: pg-run-volume
+              mountPath: /var/run/postgresql       # In-memory location for database lock/socket files
+            - name: pg-tmp-volume
+              mountPath: /tmp
+
+          volumes:
+        - name: pg-run-volume
+          emptyDir: {}
+        - name: pg-tmp-volume
+          emptyDir: {}
+          
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "$(POSTGRES_USER)", "-d", "$(POSTGRES_DB)"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "$(POSTGRES_USER)", "-d", "$(POSTGRES_DB)"]
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data # Path inside container where Postgres writes data
+  # ─── DYNAMIC STORAGE ARCHITECTURE ───#
+
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ] # Only one node can read/write to this disk at a time
+        storageClassName: "jerney-ebs-sc" # Binds directly to the StorageClass defined above
+        resources:
+          requests:
+            storage: 10Gi # Requested disk allocation

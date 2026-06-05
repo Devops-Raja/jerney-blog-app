@@ -167,14 +167,11 @@ jobs:
         run: |
           sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
-
-      - name: "Verify file location"
-        run: |
-          echo "Current Path: $(pwd)"
-          find . -name "*.yml"
           
       - name: "Patch Manifest Files with Secure Build Numbers"
         run: |
+          cd /home/runner/work/jerney-blog-app/jerney-blog-app
+          ls -l k8s/backend.yml k8s/frontend.yml
           yq -i '.spec.template.spec.containers[0].image = "${{ secrets.DOCKERHUB_USERNAME }}/jerney-backend:b${{ github.run_number }}"' k8s/backend.yml
           yq -i '.spec.template.spec.containers[0].image = "${{ secrets.DOCKERHUB_USERNAME }}/jerney-frontend:b${{ github.run_number }}"' k8s/frontend.yml
 

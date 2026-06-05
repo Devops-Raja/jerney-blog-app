@@ -22,7 +22,6 @@ services:
     read_only: true # DevSecOps: Enforces read-only filesystem (prevents attackers from modifying source files)
     tmpfs:
       - /tmp
-      - /var/cache/nginx # If using Nginx, allows it to write temp files without writing to container disk
     deploy:
       resources:
         limits:

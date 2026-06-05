@@ -148,6 +148,10 @@ jobs:
           cat .checkov.yml
           echo "Checking for hidden characters/invalid YAML:"
           python3 -c "import yaml; yaml.safe_load(open('.checkov.yml'))"
+
+      - name: "Check for configuration environment variables"
+        run: |
+           env | grep -E 'CHECKOV|CONFIG'
       - name: "Run Checkov Static Analysis"
         uses: bridgecrewio/checkov-action@v12
         

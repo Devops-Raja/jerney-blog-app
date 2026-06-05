@@ -16,4 +16,5 @@ COPY --from=builder /app ./
 RUN chown -R app_user:app_user /app
 USER app_user
 EXPOSE 5000
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "/app/src/index.js"]

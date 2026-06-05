@@ -21,12 +21,15 @@ services:
     # DevSecOps Hardening
     security_opt:
       - no-new-privileges:true
-    #read_only: true # DevSecOps: Enforces read-only filesystem (prevents attackers from modifying source files)
+    read_only: true # DevSecOps: Enforces read-only filesystem (prevents attackers from modifying source files)
     tmpfs:
       - /tmp
       - /var/run
       - /var/log/nginx
       - /var/lib/nginx
+      - /tmp:uid=101,gid=101,mode=1777
+      - /var/run:uid=101,gid=101,mode=0755
+      - /var/log/nginx:uid=101,gid=101,mode=0755
     deploy:
       resources:
         limits:

@@ -147,7 +147,8 @@ jobs:
         with:
           directory: k8s/
           framework: kubernetes
-          soft_fail: false # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
+          soft_fail: false 
+          output_format: cli # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
 
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)

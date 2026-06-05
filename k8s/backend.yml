@@ -13,12 +13,38 @@ spec:
       labels:
         app: jerney-backend
     spec:
+      securityContext:
+        runAsNonRoot: true        # Enforces that the container cannot run as UID 0 (root)
+        runAsUser: 1000           # 1000 is the default non-root 'node' user built into official Node images
+        runAsGroup: 1000
+        fsGroup: 1000
+
       containers:
         - name: backend
           image: ram7800/jerney-backend:v1
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000
+              name: http-api
+          securityContext:
+            allowPrivilegeEscalation: false # Stops child processes from gaining root execution traits
+            readOnlyRootFilesystem: true   # Turns your app directory read-only to stop malicious payload injects
+            capabilities:
+              drop:
+                - ALL
+          readinessProbe:
+            httpGet:
+              path: /api/health # Ensure your Express/Node app has this route configured!
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            
           resources:
             limits:
               cpu: "500m"
@@ -36,7 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: jerney # <-- Mapped here
+  namespace: jerney # 
 spec:
   type: ClusterIP
   ports:

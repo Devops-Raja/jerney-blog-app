@@ -55,7 +55,7 @@ services:
       - journey-network
     security_opt:
       - no-new-privileges:true
-    user: "10001:10001"
+    
     deploy:
       resources:
         limits:

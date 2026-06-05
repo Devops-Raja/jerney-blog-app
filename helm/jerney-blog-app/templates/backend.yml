@@ -4,7 +4,7 @@ metadata:
   name: jerney-backend
   namespace: jerney
 spec:
-  replicas: 2
+  replicas: {{values.backend.replicaCount}}
   selector:
     matchLabels:
       app: jerney-backend
@@ -20,7 +20,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ram7800/jerney-backend:b72 # Update this to your Docker Hub username and image tag
+          image: {{values.backend.image.repository}}:{{values.backend.image.tag}} # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000
@@ -44,12 +44,8 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 20
           resources:
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-            requests:
-              cpu: "250m"
-              memory: "256Mi"
+           {{-toYaml .Values.backend.resources | indent 12}}
+            
           envFrom:
             - configMapRef:
                 name: jerney-config
@@ -70,10 +66,10 @@ spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b72
+        - image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}}
 ---
 spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b72
+        - image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}}

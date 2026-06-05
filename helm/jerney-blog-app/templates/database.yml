@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: jerney-ebs-sc
+  name: {{.Values.postgres.storage.className}}
 provisioner: ebs.csi.eks.amazonaws.com
 parameters:
   type: gp3
@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:15-alpine
+          image: {{.Values.postgres.image.repository}}:{{.Values.postgres.image.tag}}
           env:
             - name: POSTGRES_DB
               valueFrom:
@@ -77,12 +77,7 @@ spec:
           emptyDir: {}
           
           resources:
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
+           {{-toYaml .Values.postgres.resources | indent 12}}
 
           readinessProbe:
             exec:
@@ -105,7 +100,7 @@ spec:
         name: postgres-storage
       spec:
         accessModes: [ "ReadWriteOnce" ] # Only one node can read/write to this disk at a time
-        storageClassName: "jerney-ebs-sc" # Binds directly to the StorageClass defined above
+        storageClassName: {{.Values.postgres.storage.className}} # Binds directly to the StorageClass defined above
         resources:
           requests:
-            storage: 10Gi # Requested disk allocation
+            storage: {{.Values.postgres.storage.size}} # Requested disk allocation

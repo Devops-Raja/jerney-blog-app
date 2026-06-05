@@ -1,0 +1,81 @@
+backend:
+ replicaCount: 2
+ image:
+  repository: ram7800/jerney-backend
+  tag: b72
+
+ resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+#----------------------------------------------------------#
+frontend:
+  replicaCount: 2
+  image:
+    repository: ram7800/jerney-frontend
+    tag: b72
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+#----------------------------------------------------------#
+config:
+  nodeEnv: production
+  port: "5000"
+  dbHost: "postgres-service"
+  dbPort: "5432"
+  dbName: "jerney_db"
+
+secret:
+  DB_USER: "jerney_user"
+  DB_PASSWORD: "jerney_pass_2026"
+  DATABASE_URL: "postgres://jerney_user:jerney_pass_2026@postgres-service:5432/jerney_db"
+
+  #-------------------------------------------------------------------#
+
+  postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: 15-alpine
+  storage:
+    size: 10Gi
+    className: jerney-ebs-sc
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+#-------------------------------------------------------------------#
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  paths:
+    - path: "/"
+      serviceName: "frontend-service"
+      port: 80
+    - path: "/api"
+      serviceName: "backend-service"
+      port: 5000
+#-------------------------------------------------------------------#
+
+namespace: jerney
+
+#-------------------------------------------------------------------#
+
+networkPolicy:
+  enabled: true
+  # Define the app labels so they match your deployments
+  frontendApp: "jerney-frontend"
+  backendApp: "jerney-backend"
+  dbApp: "postgres"

@@ -7,7 +7,7 @@ spec:
   # 1. Target the backend application pods
   podSelector:
     matchLabels:
-      app: jerney-backend
+      app: {{.Values.networkPolicy.backendApp| default "jerney-backend"}} # Use a value from values.yaml for flexibility
   
   policyTypes:
     - Ingress
@@ -17,7 +17,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: jerney-frontend
+              app: {{.Values.networkPolicy.frontendApp | default "jerney-frontend"}} # Use a value from values.yaml for flexibility
       ports:
         - protocol: TCP
           port: 5000 # The internal network port your Node.js backend runs on
@@ -32,7 +32,7 @@ spec:
   # 1. Target the PostgreSQL database pod
   podSelector:
     matchLabels:
-      app: postgres
+      app: {{.Values.networkPolicy.dbApp | default "jerney-postgres"}} # Use a value from values.yaml for flexibility
   
   policyTypes:
     - Ingress
@@ -42,7 +42,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: jerney-backend
+              app: {{.Values.networkPolicy.backendApp | default "jerney-backend"}} # Use a value from values.yaml for flexibility
       ports:
         - protocol: TCP
           port: 5432 # The standard PostgreSQL port

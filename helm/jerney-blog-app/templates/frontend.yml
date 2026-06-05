@@ -6,7 +6,7 @@ metadata:
   labels:
     app: jerney-frontend
 spec:
-  replicas: 2
+  replicas: {{.values.frontend.replicaCount}}
   selector:
     matchLabels:
       app: jerney-frontend
@@ -22,7 +22,7 @@ spec:
         fsGroup: 101
       containers:
         - name: frontend
-          image: ram7800/jerney-frontend:b72 # Update this to your Docker Hub username and image tag
+          image: {{.Values.frontend.image.repository}}:{{.Values.frontend.image.tag}} # Update this to your Docker Hub username and image tag
           ports:
             - containerPort: 8080
               name: http
@@ -45,12 +45,7 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 5
           resources:
-            limits:
-              cpu: "200m"
-              memory: "256Mi"
-            requests:
-              cpu: "100m"
-              memory: "128Mi"
+           {{-toYaml .Values.frontend.resources | indent 12}}
 ---
 apiVersion: v1
 kind: Service
@@ -67,4 +62,4 @@ spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-frontend:b72
+        - image: {{.Values.frontend.image.repository}}:{{.Values.frontend.image.tag}}

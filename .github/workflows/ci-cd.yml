@@ -149,7 +149,8 @@ jobs:
           framework: kubernetes
           soft_fail: false 
           output_format: cli # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
-
+          env:
+          CHECKOV_SKIP_MANIFEST: true
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

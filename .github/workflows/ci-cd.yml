@@ -151,11 +151,10 @@ jobs:
           # 2. Install specific versions to ensure compatibility
           pip install checkov==3.2.533 configargparse==1.5.3
           
-          # 3. Add the local bin path to the environment so 'checkov' is found
-          export PATH=$PATH:/home/runner/.local/bin
-          
+          CHECKOV_BIN=$(python3 -m site --user-base)/bin/checkov
+
           # 4. Execute with --no-config to bypass local .checkov.yml issues
-          checkov -d k8s/ \
+          $CHECKOV_BIN -d k8s/ \
             --framework kubernetes \
             --soft-fail false \
             --no-config

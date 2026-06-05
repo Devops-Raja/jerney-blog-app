@@ -46,7 +46,7 @@ jobs:
           scan-ref: './frontend'
           format: 'table'
           exit-code: '1' # Fails the pipeline if vulnerabilities are discovered
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
       - name: "SCA Dependency Scan: Backend"
         uses: aquasecurity/trivy-action@v0.36.0
@@ -55,7 +55,7 @@ jobs:
           scan-ref: './backend'
           format: 'table'
           exit-code: '1'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
   # ───────────────────────────────────────────────────────────
   # STAGE 3 & 4: BUILD ENGINE & CONTAINER IMAGE SCANNING

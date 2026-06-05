@@ -141,27 +141,20 @@ jobs:
       - name: "Checkout Codebase"
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Validate .checkov.yml"
-        run: |
-          echo "Content of .checkov.yml:"
-          cat .checkov.yml
-          echo "Checking for hidden characters/invalid YAML:"
-          python3 -c "import yaml; yaml.safe_load(open('.checkov.yml'))"
-
-      - name: "Check for configuration environment variables"
-        run: |
-           env | grep -E 'CHECKOV|CONFIG'
+          token: ${{ secrets.GITHUB_TOKEN }}     
       - name: "Run Checkov Static Analysis"
         uses: bridgecrewio/checkov-action@v12
         
-        with:
-          directory: k8s/
-          framework: kubernetes
-          soft_fail: false
-          # This is the key: forcing the action to look at a non-existent 
-          # or clean file prevents the parser from reading your root .checkov.yml
-          args: "--no-config"
+        run: |
+          # 1. Install specific, compatible versions to avoid the AssertionError
+          pip install checkov==3.2.533 configargparse==1.5.3
+          
+          # 2. Run the command directly using the installed binary
+          # By running this way, we avoid the Action's auto-config-loading logic
+          checkov -d k8s/ \
+            --framework kubernetes \
+            --soft-fail false \
+            --no-config
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

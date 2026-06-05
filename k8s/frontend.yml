@@ -22,7 +22,7 @@ spec:
         fsGroup: 101
       containers:
         - name: frontend
-          image: ram7800/jerney-frontend:b54 # Update this to your Docker Hub username and image tag
+          image: ram7800/jerney-frontend:b55 # Update this to your Docker Hub username and image tag
           ports:
             - containerPort: 8080
               name: http
@@ -67,4 +67,4 @@ spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-frontend:b54
+        - image: ram7800/jerney-frontend:b55

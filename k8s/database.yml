@@ -1,0 +1,79 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: jerney-local-storage
+provisioner: kubernetes.io/aws-ebs # For AWS (use 'disk.csi.azure.com' for Azure, or 'kubernetes.io/gce-pd' for GCP)
+volumeBindingMode: WaitForFirstConsumer # Ensures the disk is created in the same zone as your DB pod
+reclaimPolicy: Retain # Retain means if the DB pod is deleted, the physical disk containing data is NOT wiped out
+allowVolumeExpansion: true # Allows you to increase disk size from 10Gi to 20Gi later without tearing down the DB
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: jerney
+spec:
+  clusterIP: None # Headless service keeps network identities stable
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: jerney
+spec:
+  serviceName: "postgres-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: jerney-config
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jerney-secret
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jerney-secret
+                  key: DB_PASSWORD
+          ports:
+            - containerPort: 5432
+              name: postgres
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data # Path inside container where Postgres writes data
+  # ─── DYNAMIC STORAGE ARCHITECTURE ───
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ] # Only one node can read/write to this disk at a time
+        storageClassName: "jerney-local-storage" # Binds directly to the StorageClass defined above
+        resources:
+          requests:
+            storage: 10Gi # Requested disk allocation

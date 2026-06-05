@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jerney-backend
+  namespace: jerney 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jerney-backend
+  template:
+    metadata:
+      labels:
+        app: jerney-backend
+    spec:
+      containers:
+        - name: backend
+          image: ram7800/jerney-backend:v1
+          command: ["node", "src/index.js"]
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          envFrom:
+            - configMapRef:
+                name: jerney-config
+            - secretRef:
+                name: jerney-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: jerney # <-- Mapped here
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+  selector:
+    app: jerney-backend
+---

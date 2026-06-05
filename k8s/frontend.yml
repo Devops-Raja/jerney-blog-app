@@ -16,24 +16,22 @@ spec:
         app: jerney-frontend
     spec:
       securityContext:
-        runAsNonRoot: true        # Prevents the container from starting if it runs as root
-        runAsUser: 101            # Forces execution as a standard non-root user (101 is standard for nginx-unprivileged)
+        runAsNonRoot: true # Prevents the container from starting if it runs as root
+        runAsUser: 101 # Forces execution as a standard non-root user (101 is standard for nginx-unprivileged)
         runAsGroup: 101
         fsGroup: 101
-
       containers:
         - name: frontend
-          image: ram7800/jerney-frontend:{{github.run_number}} # Update this to your Docker Hub username and image tag
+          image: ram7800/jerney-frontend:b53 # Update this to your Docker Hub username and image tag
           ports:
             - containerPort: 8080
               name: http
           securityContext:
             allowPrivilegeEscalation: false # Prevents processes from gaining more privileges than their parent
-            readOnlyRootFilesystem: true   # Locks the root disk down. Attackers cannot download or install malware/scripts
+            readOnlyRootFilesystem: true # Locks the root disk down. Attackers cannot download or install malware/scripts
             capabilities:
               drop:
                 - ALL
-
           livenessProbe:
             httpGet:
               path: /
@@ -46,7 +44,6 @@ spec:
               port: 8080
             initialDelaySeconds: 3
             periodSeconds: 5
-            
           resources:
             limits:
               cpu: "200m"
@@ -54,8 +51,6 @@ spec:
             requests:
               cpu: "100m"
               memory: "128Mi"
-
-          
 ---
 apiVersion: v1
 kind: Service
@@ -69,3 +64,7 @@ spec:
       targetPort: 8080
   selector:
     app: jerney-frontend
+  template:
+    spec:
+      containers:
+        - image: ram7800/jerney-frontend:b53

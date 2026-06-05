@@ -1,5 +1,11 @@
-# Use comma-separated strings instead of lists
-compact: CKV_AWS_39,CKV_AWS_58
+# Use 'skip-check' instead of 'compact' to ignore specific security rules
+skip-check: CKV_AWS_39,CKV_AWS_58
+
+# These flags are correct as True/False (boolean)
 soft-fail: false
+
+# Use 'framework' as a single string
 framework: terraform
+
+# Use 'directory' as a path
 directory: terraform

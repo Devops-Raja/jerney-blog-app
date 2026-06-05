@@ -139,7 +139,7 @@ jobs:
     continue-on-error: true # Hard-fails if any manifest contains critical security misconfigurations
     runs-on: ubuntu-latest
     steps: 
-      - name: "Checkout Codebase" 
+      - name: "Checkout Codebase"
         uses: actions/checkout@v4
 
       # Scans your k8s/frontend.yml, backend.yml, and network policies for runtime security leaks
@@ -148,8 +148,8 @@ jobs:
         with:
           directory: k8s/
           framework: kubernetes
-          soft_fail: false 
-          output_format: cli # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
+          soft_fail: false
+          #output_format: cli # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

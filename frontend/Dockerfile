@@ -9,9 +9,8 @@ RUN npm run build
 
 ###--------PRODUCTION STAGE--------###
 FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-
 RUN rm -rf /etc/nginx/conf.d/default.conf /usr/share/nginx/html/*
+COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN chown -R nginx:nginx /usr/share/nginx/html && \

@@ -146,11 +146,10 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         
         run: |
-          # 1. Install specific, compatible versions to avoid the AssertionError
+   
           pip install checkov==3.2.533 configargparse==1.5.3
           
-          # 2. Run the command directly using the installed binary
-          # By running this way, we avoid the Action's auto-config-loading logic
+
           checkov -d k8s/ \
             --framework kubernetes \
             --soft-fail false \

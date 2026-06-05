@@ -144,12 +144,11 @@ jobs:
 
       # Scans your k8s/frontend.yml, backend.yml, and network policies for runtime security leaks
       - name: "Run Checkov Static Analysis"
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          directory: k8s/
-          framework: kubernetes
-          soft_fail: false
-          #output_format: cli # Hard-fails if manifests contain root execution leaks or broad vulnerabilities
+        run: |
+         
+          pip install --upgrade checkov
+          checkov -d k8s/ --framework kubernetes --config-file .checkov.yml --output sarif --soft-fail false
+ 
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────
@@ -169,6 +168,11 @@ jobs:
           sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
 
+      - name: "Verify file location"
+        run: |
+          echo "Current Path: $(pwd)"
+          find . -name "*.yml"
+          
       - name: "Patch Manifest Files with Secure Build Numbers"
         run: |
           yq -i '.spec.template.spec.containers[0].image = "${{ secrets.DOCKERHUB_USERNAME }}/jerney-backend:b${{ github.run_number }}"' k8s/backend.yml

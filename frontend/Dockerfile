@@ -8,7 +8,7 @@ COPY   . .
 RUN npm run build
 
 ###--------PRODUCTION STAGE--------###
-FROM  nginxinc/nginx-unprivileged:alpine-3.23
+FROM nginxinc/nginx-unprivileged:alpine
 RUN rm -rf /etc/nginx/conf.d/default.conf /usr/share/nginx/html/*
 COPY --from=builder /app/dist /usr/share/nginx/html
 

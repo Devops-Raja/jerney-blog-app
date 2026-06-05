@@ -146,16 +146,13 @@ jobs:
       - name: "Run Checkov Static Analysis"
        
         run: |
-           pip install --upgrade checkov
-           CHECKOV_PATH=$(find /home/runner/.local/bin -name checkov -type f)
-           echo "Checkov binary found at: $CHECKOV_PATH"
-           unset CHECKOV_CONFIG_FILE
-            python3 -m checkov -d k8s/ \
-              --framework kubernetes \
-              --output sarif \
-              --soft-fail false \
-              --no-config               
-         
+           with:
+            args: >
+             -d k8s/ 
+             --framework kubernetes 
+              --output sarif 
+              --soft-fail false 
+              --no-config
          # pip install --upgrade checkov
           #checkov -d k8s/ --framework kubernetes --config-file .checkov.yml --output sarif --soft-fail false
  

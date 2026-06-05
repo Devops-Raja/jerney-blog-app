@@ -1,68 +1,108 @@
+version: '3.8'
 services:
-  # ---- PostgreSQL Database ----
+  # ==========================================
+  # FRONTEND SERVICE
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend # Path to  frontend directory
+      dockerfile: Dockerfile
+    container_name: journey-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy # Ensures frontend only starts when backend is healthy
+    ports:
+      - "80:80"   # HTTP public traffic
+      - "443:443" # HTTPS public traffic (for SSL termination)
+    networks:
+      - journey-network
+    # DevSecOps Hardening
+    security_opt:
+      - no-new-privileges:true
+    read_only: true # DevSecOps: Enforces read-only filesystem (prevents attackers from modifying source files)
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx # If using Nginx, allows it to write temp files without writing to container disk
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+
+  # ==========================================
+  # BACKEND SERVICE 
+  # ==========================================
+  backend:
+    build:
+      context: ./backend # Path to your backend directory
+      dockerfile: Dockerfile
+    container_name: journey-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy # Waits for DB to be fully ready
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - NODE_ENV=production
+    # DevSecOps: Removed public port mapping. 
+    # The frontend/reverse-proxy talks to it via the internal network over port 8080.
+    expose:
+      - "8080" 
+    networks:
+      - journey-network
+    security_opt:
+      - no-new-privileges:true
+    user: "10001:10001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    healthcheck: # Added healthcheck so the frontend knows when the backend is truly ready
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==========================================
+  # DATABASE SERVICE (PostgreSQL)
+  # ==========================================
   db:
     image: postgres:16-alpine
-    container_name: jerney-db
+    container_name: journey-db
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: jerney_user
-      POSTGRES_PASSWORD: jerney_pass_2026
-      POSTGRES_DB: jerney_db
-    ports:
-      - "5432:5432"
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - journey-network
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1GB
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jerney_user -d jerney_db"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
-    # Security: read-only root filesystem where possible
-    tmpfs:
-      - /tmp
-      - /run
-
-  # ---- Backend API ----
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: jerney-backend
-    restart: unless-stopped
-    environment:
-      PORT: "5000"
-      DB_USER: jerney_user
-      DB_PASSWORD: jerney_pass_2026
-      DB_HOST: db
-      DB_PORT: "5432"
-      DB_NAME: jerney_db
-    expose:
-      - "5000"
-    depends_on:
-      db:
-        condition: service_healthy
-    # Security: do not run as root (already in Dockerfile, but enforced here too)
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-
-  # ---- Frontend (Nginx + React) ----
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: jerney-frontend
-    restart: unless-stopped
-    ports:
-      - "80:8080"
-    depends_on:
-      - backend
-    security_opt:
-      - no-new-privileges:true
 
 volumes:
   pgdata:
     driver: local
+  trivy-cache:
+
+networks:
+  journey-network:
+    driver: bridge

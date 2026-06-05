@@ -16,4 +16,4 @@ COPY --from=builder /app ./
 RUN chown -R app_user:app_user /app
 USER app_user
 EXPOSE 5000
-CMD ["node", "index.js"]
+CMD ["node", "src/index.js"]

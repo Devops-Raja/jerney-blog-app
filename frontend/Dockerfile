@@ -13,7 +13,7 @@ USER root
 ##Switch to root to perform necessary system cleanup
 
 RUN rm -rf /etc/nginx/conf.d/default.conf /usr/share/nginx/html/*
-USER nginx
+
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 

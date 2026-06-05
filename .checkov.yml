@@ -1,8 +1,5 @@
-compact:
-  - CKV_AWS_39   # Public access to EKS endpoint (needed for kubectl)
-  - CKV_AWS_58   # EKS public endpoint (intentional for dev access)
+# Use comma-separated strings instead of lists
+compact: CKV_AWS_39,CKV_AWS_58
 soft-fail: false
-framework:
-  - terraform
-directory:
-  - terraform
+framework: terraform
+directory: terraform

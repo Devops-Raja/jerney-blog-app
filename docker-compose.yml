@@ -15,7 +15,8 @@ services:
       - "80:8080"   # HTTP public traffic
     networks:
       - journey-network
-    command: ["nginx", "-g", "daemon off; pid /tmp/nginx.pid;"]
+    entrypoint: ["nginx"]
+    command: ["-g", "daemon off; pid /tmp/nginx.pid;"]
     # DevSecOps Hardening
     security_opt:
       - no-new-privileges:true

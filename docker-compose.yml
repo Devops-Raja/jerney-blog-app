@@ -50,7 +50,7 @@ services:
     # DevSecOps: Removed public port mapping. 
     # The frontend/reverse-proxy talks to it via the internal network over port 8080.
     expose:
-      - "8080" 
+      - "5000" 
     networks:
       - journey-network
     security_opt:
@@ -62,7 +62,7 @@ services:
           cpus: '0.50'
           memory: 512M
     healthcheck: # Added healthcheck so the frontend knows when the backend is truly ready
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 10s
       timeout: 5s
       retries: 3

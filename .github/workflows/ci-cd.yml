@@ -143,13 +143,18 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}     
       - name: "Run Checkov Static Analysis"
-        uses: bridgecrewio/checkov-action@v12
-        
+        shell: bash
         run: |
-   
+          # 1. Update pip to ensure we don't hit permission issues
+          python3 -m pip install --upgrade pip
+          
+          # 2. Install specific versions to ensure compatibility
           pip install checkov==3.2.533 configargparse==1.5.3
           
-
+          # 3. Add the local bin path to the environment so 'checkov' is found
+          export PATH=$PATH:/home/runner/.local/bin
+          
+          # 4. Execute with --no-config to bypass local .checkov.yml issues
           checkov -d k8s/ \
             --framework kubernetes \
             --soft-fail false \

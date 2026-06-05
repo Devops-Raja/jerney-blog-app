@@ -156,7 +156,7 @@ jobs:
           # 4. Execute with --no-config to bypass local .checkov.yml issues
           $CHECKOV_BIN -d k8s/ \
             --framework kubernetes \
-            --soft-fail false \
+           
             --no-config
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)

@@ -17,7 +17,7 @@ services:
       - journey-network
 
     entrypoint: ["/bin/sh", "-c"]
-    command: ["nginx", "-g", "daemon off; pid /tmp/nginx.pid;"]
+    command: ["nginx", "-c", "/etc/nginx/conf.d/default.conf", "-g", "daemon off; pid /tmp/nginx.pid;"]
     # DevSecOps Hardening
     security_opt:
       - no-new-privileges:true

@@ -147,6 +147,8 @@ jobs:
        
         run: |
            pip install --upgrade checkov
+           CHECKOV_PATH=$(find /home/runner/.local/bin -name checkov -type f)
+           echo "Checkov binary found at: $CHECKOV_PATH"
            unset CHECKOV_CONFIG_FILE
             python3 -m checkov -d k8s/ \
               --framework kubernetes \

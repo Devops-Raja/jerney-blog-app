@@ -146,7 +146,8 @@ jobs:
       - name: "Run Checkov Static Analysis"
        
         run: |
-          checkov -d k8s/ \
+           pip install --upgrade checkov
+           checkov -d k8s/ \
             --framework kubernetes \
             --output sarif \
             --soft-fail false \

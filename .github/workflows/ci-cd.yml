@@ -140,9 +140,17 @@ jobs:
     steps: 
       - name: "Checkout Codebase"
         uses: actions/checkout@v4
-
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Validate .checkov.yml"
+        run: |
+          echo "Content of .checkov.yml:"
+          cat .checkov.yml
+          echo "Checking for hidden characters/invalid YAML:"
+          python3 -c "import yaml; yaml.safe_load(open('.checkov.yml'))"
       - name: "Run Checkov Static Analysis"
         uses: bridgecrewio/checkov-action@v12
+        
         with:
           directory: k8s/
           framework: kubernetes

@@ -157,8 +157,16 @@ jobs:
           # 4. Execute with --no-config to bypass local .checkov.yml issues
           $CHECKOV_BIN -d k8s/ \
             --framework kubernetes \
-           
             --no-config
+
+      - name: Run Checkov on Terraform
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform/
+          framework: terraform
+          soft_fail: false
+          skip_check: CKV_AWS_39,CKV_AWS_58  # Public EKS endpoint (intentional for dev)
+          output_format: cli
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

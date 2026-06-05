@@ -149,8 +149,7 @@ jobs:
           soft_fail: false
           # This is the key: forcing the action to look at a non-existent 
           # or clean file prevents the parser from reading your root .checkov.yml
-          config_file: /dev/null
-          
+          args: "--no-config"
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

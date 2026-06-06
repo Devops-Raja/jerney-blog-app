@@ -11,7 +11,7 @@ module "load_balancer_controller_irsa" {
     }
   }
 
-  role_policy_arns = [
-    "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
-  ]
+  role_policy_arns = {
+    policy = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
+  }
 }

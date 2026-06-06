@@ -10,8 +10,4 @@ module "load_balancer_controller_irsa" {
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
-
-  role_policy_arns = {
-    policy = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
-  }
 }

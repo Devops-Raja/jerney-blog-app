@@ -46,3 +46,33 @@ output "node_security_group_id" {
   description = "The shared security group ID attached to all EC2 worker nodes"
   value       = module.eks.node_security_group_id
 }
+
+# Output the ArgoCD Initial Admin Password
+data "kubernetes_secret" "argocd_admin_password" {
+  metadata {
+    name      = "argocd-initial-admin-secret"
+    namespace = "argocd"
+  }
+  depends_on = [helm_release.argocd]
+}
+
+output "argocd_initial_admin_password" {
+  description = "The initial admin password for ArgoCD"
+  value       = nonsensitive(data.kubernetes_secret.argocd_admin_password.data["password"])
+  sensitive   = true # Terraform will mask this in output unless -raw is used
+}
+
+
+#Output the ALB DNS Name from the Ingress
+data "kubernetes_ingress_v1" "argocd_ingress" {
+  metadata {
+    name      = "argocd-server" # Standard name if using the chart
+    namespace = "argocd"
+  }
+  depends_on = [helm_release.argocd]
+}
+
+output "argocd_alb_hostname" {
+  description = "The public DNS name for the ArgoCD Load Balancer"
+  value       = data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname
+}

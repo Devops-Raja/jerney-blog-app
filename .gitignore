@@ -16,3 +16,15 @@ terraform/crash.log
 # OS
 .DS_Store
 Thumbs.db
+# Ignore local Terraform files
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Terraform (Global coverage)
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/.terraform.lock.hcl
+**/crash.log

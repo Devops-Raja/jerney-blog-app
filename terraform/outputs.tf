@@ -63,18 +63,3 @@ output "argocd_initial_admin_password" {
 }
 
 
-
-data "kubernetes_ingress_v1" "argocd_ingress" {
-  metadata {
-    name      = "argocd-server" # Ensure this matches your ArgoCD ingress name
-    namespace = "argocd"
-  }
-}
-
-data "kubernetes_ingress_v1" "jerney_app_ingress" {
-  metadata {
-    name      = "jerney-ingress" # Ensure this matches your app ingress name
-    namespace = "jerney"
-  }
-}
-

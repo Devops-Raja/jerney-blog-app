@@ -32,4 +32,6 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.load_balancer_controller_irsa.iam_role_arn
   }
+
+ depends_on = [module.eks, module.load_balancer_controller_irsa]
 }

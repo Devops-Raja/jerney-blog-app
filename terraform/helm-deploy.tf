@@ -20,7 +20,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   }
 
   set {
-    name  = "vpc"
+    name  = "vpcId"
     value = module.vpc.vpc_id # <--- Change to your actual AWS Region
   }
   set {

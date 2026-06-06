@@ -65,6 +65,7 @@ module "eks" {
     enabled    = true
     node_pools = ["general-purpose"] # Automatically scales instances based on your workloads
   }
+  create_cloudwatch_log_group = true
   cluster_enabled_log_types = [
     "api",
     "audit",

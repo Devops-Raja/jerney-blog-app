@@ -18,7 +18,7 @@ resource "kubernetes_manifest" "jerney_app_definition" {
       source = {
         repoURL        = "https://github.com/YOUR_USERNAME/jerney-blog-app.git" # MUST BE YOUR REPO
         targetRevision = "main"
-        path           = "k8s" # This folder must exist in your repo
+        path           = "helm/jerney-blog-app" # This folder must exist in your repo
       }
       destination = {
         server    = "https://kubernetes.default.svc"

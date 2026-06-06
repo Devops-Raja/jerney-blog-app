@@ -1,9 +1,7 @@
 module "load_balancer_controller_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.44"
 
-  # Use 'role_name' if 'name' failed, or vice versa depending on exact submodule version
-  # Most current versions of this submodule use 'role_name'
   role_name = "eks-lb-controller-${var.cluster_name}"
 
   oidc_providers = {
@@ -13,7 +11,7 @@ module "load_balancer_controller_irsa" {
     }
   }
 
-  role_policy_arns = {
-    policy = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
-  }
+  role_policy_arns = [
+    "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
+  ]
 }

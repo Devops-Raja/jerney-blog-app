@@ -14,7 +14,15 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "serviceAccount.create"
     value = "true"
   }
+  set {
+    name  = "region"
+    value = "ap-south-2" # <--- Change to your actual AWS Region
+  }
 
+  set {
+    name  = "vpc"
+    value = module.vpc.vpc_id # <--- Change to your actual AWS Region
+  }
   set {
     name  = "serviceAccount.name"
     value = "aws-load-balancer-controller"

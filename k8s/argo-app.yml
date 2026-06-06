@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/YOUR_ORG/jerney-blog-app.git' # Replace with your repo
-    targetRevision: main
-    path: k8s/  # This is the folder Argo CD will watch
+    repoURL: 'https://github.com/Devops-Raja/jerney-blog-app.git' # Replace with your repo
+    targetRevision: devops
+    path: helm/jerney-blog-app/  # This is the folder Argo CD will watch
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: jerney

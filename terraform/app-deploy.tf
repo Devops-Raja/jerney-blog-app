@@ -17,7 +17,7 @@ resource "kubernetes_manifest" "jerney_app_definition" {
       project = "default"
       source = {
         repoURL        = "https://github.com/Devops-Raja/jerney-blog-app.git" # MUST BE YOUR REPO
-        targetRevision = "main"
+        targetRevision = "devops"
         path           = "helm/jerney-blog-app" # This folder must exist in your repo
       }
       destination = {

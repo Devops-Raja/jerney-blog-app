@@ -62,12 +62,29 @@ output "argocd_initial_admin_password" {
   sensitive   = true # Terraform will mask this in output unless -raw is used
 }
 
-# Use conditional logic to prevent "index null" errors
+
+
+data "kubernetes_ingress_v1" "argocd_ingress" {
+  metadata {
+    name      = "argocd-server" # Ensure this matches your ArgoCD ingress name
+    namespace = "argocd"
+  }
+}
+
+data "kubernetes_ingress_v1" "jerney_app_ingress" {
+  metadata {
+    name      = "jerney-ingress" # Ensure this matches your app ingress name
+    namespace = "jerney"
+  }
+}
+
+# --- NOW YOUR EXISTING OUTPUT BLOCKS WILL WORK ---
+
 output "argocd_alb_hostname" {
   description = "The public DNS name for the ArgoCD Load Balancer"
   value = try(
     data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname,
-    "ALB still provisioning..."
+    "ALB is still provisioning..."
   )
 }
 
@@ -75,6 +92,6 @@ output "app_access_url" {
   description = "The public URL to access the Jerney Blog App"
   value = try(
     "http://${data.kubernetes_ingress_v1.jerney_app_ingress.status[0].load_balancer[0].ingress[0].hostname}",
-    "App ALB still provisioning..."
+    "App ALB is still provisioning..."
   )
 }

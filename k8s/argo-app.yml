@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jerney-blog-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/YOUR_ORG/jerney-blog-app.git' # Replace with your repo
+    targetRevision: main
+    path: k8s/  # This is the folder Argo CD will watch
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: jerney
+  syncPolicy:
+    automated:
+      selfHeal: true # Automatically fix drift
+      prune: true    # Delete resources removed from Git

@@ -32,7 +32,10 @@ resource "kubernetes_manifest" "jerney_app_definition" {
       }
     }
   }
-
-  # This ensures the namespace and ArgoCD exist before trying to create the app
-  depends_on = [helm_release.argocd, kubernetes_namespace.jerney]
+  # This forces Terraform to wait for EKS to be finished
+  depends_on = [
+    module.eks, 
+    helm_release.argocd, 
+    kubernetes_namespace.jerney
+  ]
 }

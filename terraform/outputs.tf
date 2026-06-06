@@ -78,20 +78,3 @@ data "kubernetes_ingress_v1" "jerney_app_ingress" {
   }
 }
 
-# --- NOW YOUR EXISTING OUTPUT BLOCKS WILL WORK ---
-
-output "argocd_alb_hostname" {
-  description = "The public DNS name for the ArgoCD Load Balancer"
-  value = try(
-    data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname,
-    "ALB is still provisioning..."
-  )
-}
-
-output "app_access_url" {
-  description = "The public URL to access the Jerney Blog App"
-  value = try(
-    "http://${data.kubernetes_ingress_v1.jerney_app_ingress.status[0].load_balancer[0].ingress[0].hostname}",
-    "App ALB is still provisioning..."
-  )
-}

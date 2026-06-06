@@ -21,7 +21,7 @@ module "load_balancer_controller_irsa" {
 
   # ADD THIS: These are the permissions needed to talk to AWS Load Balancer API
   role_policy_arns = {
-    policy = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy" 
+    policy = aws_iam_policy.lb_controller_policy.arn
   }
 
   oidc_providers = {

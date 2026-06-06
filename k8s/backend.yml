@@ -20,7 +20,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ram7800/jerney-backend:b75 # Update this to your Docker Hub username and image tag
+          image: ram7800/jerney-backend:b76 # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000
@@ -70,10 +70,10 @@ spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b75
+        - image: ram7800/jerney-backend:b76
 ---
 spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b75
+        - image: ram7800/jerney-backend:b76

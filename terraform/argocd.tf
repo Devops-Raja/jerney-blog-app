@@ -11,7 +11,7 @@ resource "helm_release" "argocd" {
     <<EOF
 server:
   service:
-    type: LoadBalancer
+    type: loadBalancer
 configs:
   params:
     server.insecure: true

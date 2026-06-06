@@ -84,6 +84,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       ## create a .env on root directory for these variables
+      
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:

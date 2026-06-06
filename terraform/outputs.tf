@@ -76,3 +76,17 @@ output "argocd_alb_hostname" {
   description = "The public DNS name for the ArgoCD Load Balancer"
   value       = data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname
 }
+
+# Output the Application Load Balancer URL for your app
+data "kubernetes_ingress_v1" "jerney_app_ingress" {
+  metadata {
+    name      = "jerney-ingress"
+    namespace = "jerney"
+  }
+  depends_on = [helm_release.argocd] # Ensure this waits for your app deployment
+}
+
+output "app_access_url" {
+  description = "The public URL to access the Jerney Blog App"
+  value       = "http://${data.kubernetes_ingress_v1.jerney_app_ingress.status[0].load_balancer[0].ingress[0].hostname}"
+}

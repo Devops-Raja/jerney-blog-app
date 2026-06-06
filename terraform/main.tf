@@ -56,7 +56,7 @@ module "eks" {
   # Network Integration
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets # EKS will run pods in your massive /20 private pools
-
+  enable_irsa = true # Enable IAM Roles for Service Accounts for secure pod permissions
   # Endpoint Security Setup
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true

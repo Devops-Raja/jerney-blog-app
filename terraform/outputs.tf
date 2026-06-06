@@ -62,31 +62,19 @@ output "argocd_initial_admin_password" {
   sensitive   = true # Terraform will mask this in output unless -raw is used
 }
 
-
-#Output the ALB DNS Name from the Ingress
-data "kubernetes_ingress_v1" "argocd_ingress" {
-  metadata {
-    name      = "argocd-server" # Standard name if using the chart
-    namespace = "argocd"
-  }
-  depends_on = [helm_release.argocd]
-}
-
+# Use conditional logic to prevent "index null" errors
 output "argocd_alb_hostname" {
   description = "The public DNS name for the ArgoCD Load Balancer"
-  value       = data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname
-}
-
-# Output the Application Load Balancer URL for your app
-data "kubernetes_ingress_v1" "jerney_app_ingress" {
-  metadata {
-    name      = "jerney-ingress"
-    namespace = "jerney"
-  }
-  depends_on = [helm_release.argocd] # Ensure this waits for your app deployment
+  value = try(
+    data.kubernetes_ingress_v1.argocd_ingress.status[0].load_balancer[0].ingress[0].hostname,
+    "ALB still provisioning..."
+  )
 }
 
 output "app_access_url" {
   description = "The public URL to access the Jerney Blog App"
-  value       = "http://${data.kubernetes_ingress_v1.jerney_app_ingress.status[0].load_balancer[0].ingress[0].hostname}"
+  value = try(
+    "http://${data.kubernetes_ingress_v1.jerney_app_ingress.status[0].load_balancer[0].ingress[0].hostname}",
+    "App ALB still provisioning..."
+  )
 }

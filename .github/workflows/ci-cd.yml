@@ -211,7 +211,7 @@ jobs:
           git add k8s/backend.yml k8s/frontend.yml
           
           if ! git diff --cached --exit-code; then
-            git commit -m "chore(gitops): update secure images to build b${{ github.run_number }} [skip ci]"
+            git commit -m "(gitops): update secure images to build b${{ github.run_number }} [skip ci]"
             git push origin ${{ github.ref_name }}
           else
             echo "Zero drift detected. Skipping manifest synchronization."

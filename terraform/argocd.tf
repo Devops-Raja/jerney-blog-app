@@ -17,4 +17,6 @@ configs:
     server.insecure: true
 EOF
   ]
+
+  depends_on = [helm_release.aws_load_balancer_controller]
 }

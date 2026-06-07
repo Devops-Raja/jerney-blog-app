@@ -59,4 +59,5 @@ spec:
       targetPort: 8080
   selector:
     app: jerney-frontend
+    
 

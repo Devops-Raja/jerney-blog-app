@@ -16,7 +16,7 @@ frontend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-frontend
-    tag: b72
+    tag: b77
   resources:
     limits:
       cpu: 200m

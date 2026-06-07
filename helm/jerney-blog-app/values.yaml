@@ -39,7 +39,7 @@ secret:
 
   #-------------------------------------------------------------------#
 
-  postgres:
+postgres:
   replicaCount: 1
   image:
     repository: postgres

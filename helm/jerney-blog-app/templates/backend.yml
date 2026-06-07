@@ -45,7 +45,6 @@ spec:
             periodSeconds: 20
           resources:
           {{- toYaml .Values.backend.resources | indent 12 }}
-            
           envFrom:
             - configMapRef:
                 name: jerney-config

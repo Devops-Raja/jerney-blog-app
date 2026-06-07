@@ -9,6 +9,8 @@ metadata:
     # Essential for ALB to work
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    # This group name merges this with any other ingress sharing this name
+    alb.ingress.kubernetes.io/group.name: shared-alb-group
 spec:
   ingressClassName: alb
   rules:
@@ -21,10 +23,11 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-          - path: /api
+          # Note: This requires setting --rootpath=/argocd in ArgoCD config
+          - path: /argocd
             pathType: Prefix
             backend:
               service:
-                name: backend-service
+                name: argocd-server
                 port:
-                  number: 5000
+                  number: 80

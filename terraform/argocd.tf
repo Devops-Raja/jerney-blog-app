@@ -11,7 +11,10 @@ resource "helm_release" "argocd" {
     <<EOF
 server:
   service:
-    type: LoadBalancer
+    type: ClusterIP
+    extraArgs:
+    - --rootpath=/argocd
+    - --insecure
 configs:
   params:
     server.insecure: true

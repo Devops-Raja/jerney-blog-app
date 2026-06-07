@@ -29,6 +29,7 @@ spec:
       containers:
         - name: postgres
           image: {{.Values.postgres.image.repository}}:{{.Values.postgres.image.tag}}
+          command: ["/bin/sh", "-c", "sleep 3600"]
           env:
             - name: POSTGRES_DB
               valueFrom:

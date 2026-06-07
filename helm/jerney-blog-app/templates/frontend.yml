@@ -59,7 +59,4 @@ spec:
       targetPort: 8080
   selector:
     app: jerney-frontend
-  template:
-    spec:
-      containers:
-        - image: {{.Values.frontend.image.repository}}:{{.Values.frontend.image.tag}}
+

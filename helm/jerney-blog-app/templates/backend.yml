@@ -68,8 +68,5 @@ spec:
     - port: 5000
   selector:
     app: jerney-backend
-  template:
-    spec:
-      containers:
-        - image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}}
+
 

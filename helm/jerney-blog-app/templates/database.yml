@@ -57,14 +57,14 @@ spec:
             - name: pg-tmp-volume
               mountPath: /tmp
 
-          volumes:
-            - name: postgres-storage
-              persistentVolumeClaim:
-                claimName: postgres-storage
-            - name: pg-run-volume
-              emptyDir: {}
-            - name: pg-tmp-volume
-              emptyDir: {}
+      volumes:
+         - name: postgres-storage
+           persistentVolumeClaim:
+             claimName: postgres-storage
+         - name: pg-run-volume
+           emptyDir: {}
+         - name: pg-tmp-volume
+          emptyDir: {}
           
           resources:
           {{- toYaml .Values.postgres.resources | nindent 12 }}

@@ -51,7 +51,7 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: jerney-secret
+                  name: jerney-secrets
                   key: DB_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -71,10 +71,10 @@ spec:
               mountPath: /tmp
 
           volumes:
-        - name: pg-run-volume
-          emptyDir: {}
-        - name: pg-tmp-volume
-          emptyDir: {}
+            - name: pg-run-volume
+              emptyDir: {}
+            - name: pg-tmp-volume
+              emptyDir: {}
           
           resources:
           {{- toYaml .Values.postgres.resources | nindent 12 }}

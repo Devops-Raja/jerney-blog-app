@@ -4,7 +4,7 @@ metadata:
   name: jerney-backend
   namespace: jerney
 spec:
-  replicas: {{values.backend.replicaCount}}
+  replicas: {{.Values.backend.replicaCount}}
   selector:
     matchLabels:
       app: jerney-backend
@@ -20,7 +20,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: {{values.backend.image.repository}}:{{values.backend.image.tag}} # Update this to your Docker Hub username and image tag
+          image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}} # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000

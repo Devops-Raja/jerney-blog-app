@@ -83,3 +83,18 @@ networkPolicy:
   frontendApp: "jerney-frontend"
   backendApp: "jerney-backend"
   dbApp: "postgres"
+
+#-------------------------------------------------------------------#
+argocd:
+  enabled: true
+  name: "jerney-blog-app"
+  namespace: "argocd"
+  project: "default"
+  repoURL: "https://github.com/Devops-Raja/jerney-blog-app.git"
+  targetRevision: "devops"
+  path: "helm/jerney-blog-app"
+  destinationServer: "https://kubernetes.default.svc"
+  targetNamespace: "jerney"
+  syncPolicy:
+    selfHeal: true
+    prune: true

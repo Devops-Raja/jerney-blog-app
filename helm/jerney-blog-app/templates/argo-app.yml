@@ -1,18 +1,20 @@
+{{- if .Values.argocd.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jerney-blog-app
-  namespace: argocd
+  name: {{ .Values.argocd.name | default "jerney-blog-app" }}
+  namespace: {{ .Values.argocd.namespace | default "argocd" }}
 spec:
-  project: default
+  project: {{ .Values.argocd.project | default "default" }}
   source:
-    repoURL: https://github.com/Devops-Raja/jerney-blog-app.git
-    targetRevision: devops
-    path: helm/jerney-blog-app
+    repoURL: {{ .Values.argocd.repoURL }}
+    targetRevision: {{ .Values.argocd.targetRevision }}
+    path: {{ .Values.argocd.path }}
   destination:
-    server: https://kubernetes.default.svc
-    namespace: jerney
+    server: {{ .Values.argocd.destinationServer | default "https://kubernetes.default.svc" }}
+    namespace: {{ .Values.argocd.targetNamespace | default "jerney" }}
   syncPolicy:
     automated:
-      selfHeal: true
-      prune: true
+      selfHeal: {{ .Values.argocd.syncPolicy.selfHeal | default true }}
+      prune: {{ .Values.argocd.syncPolicy.prune | default true }}
+{{- end }}

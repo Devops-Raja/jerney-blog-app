@@ -6,7 +6,7 @@ metadata:
   labels:
     app: jerney-frontend
 spec:
-  replicas: {{.values.frontend.replicaCount}}
+  replicas: {{.Values.frontend.replicaCount}}
   selector:
     matchLabels:
       app: jerney-frontend

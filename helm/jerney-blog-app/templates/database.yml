@@ -74,10 +74,10 @@ spec:
             periodSeconds: 20
       volumes:
         - name: postgres-storage
-           persistentVolumeClaim:
+          persistentVolumeClaim:
              claimName: postgres-storage
         - name: pg-run-volume
-           emptyDir: {}
+          emptyDir: {}
         - name: pg-tmp-volume
           emptyDir: {}
           

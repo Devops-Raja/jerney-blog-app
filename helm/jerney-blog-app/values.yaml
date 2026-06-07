@@ -2,7 +2,7 @@ backend:
  replicaCount: 2
  image:
   repository: ram7800/jerney-backend
-  tag: b72
+  tag: b77
 
  resources:
   limits:

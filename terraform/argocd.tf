@@ -12,7 +12,7 @@ resource "helm_release" "argocd" {
 server:
   service:
     type: ClusterIP
-    extraArgs:
+  extraArgs:
     - --rootpath=/argocd
     - --insecure
 configs:

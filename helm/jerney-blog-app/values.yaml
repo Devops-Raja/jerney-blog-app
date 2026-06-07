@@ -61,7 +61,7 @@ postgres:
   config:
     nodeEnv: production
     port: "5000"
-    dbHost: "postgres-service"
+    dbHost: "postgres-service.jerney.svc.cluster.local"
     dbPort: "5432"
     dbName: "jerney_db"
 

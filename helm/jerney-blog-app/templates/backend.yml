@@ -18,6 +18,12 @@ spec:
         runAsUser: 1000 # 1000 is the default non-root 'node' user built into official Node images
         runAsGroup: 1000
         fsGroup: 1000
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.36
+          # This command loops until the service is resolvable via DNS
+          command: ['sh', '-c', 'until nslookup postgres-service.jerney.svc.cluster.local; do echo waiting for db; sleep 2; done;']
+      
       containers:
         - name: backend
           image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}} # Update this to your Docker Hub username and image tag

@@ -375,13 +375,6 @@ spec:
                  port:
                    number: 80
 ---
-# Source: jerney-blog-app/templates/backend.yml
-spec:
-  template:
-    spec:
-      containers:
-        - image: ram7800/jerney-backend:b72
----
 # Source: jerney-blog-app/templates/argo-app.yml
 apiVersion: argoproj.io/v1alpha1
 kind: Application

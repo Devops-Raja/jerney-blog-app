@@ -54,6 +54,17 @@ postgres:
     requests:
       cpu: 250m
       memory: 512Mi
+  secret:
+    DB_USER: "jerney_user"
+    DB_PASSWORD: "jerney_pass_2026"
+    DATABASE_URL: "postgres://jerney_user:jerney_pass_2026@postgres-service:5432/jerney_db"
+  config:
+    nodeEnv: production
+    port: "5000"
+    dbHost: "postgres-service"
+    dbPort: "5432"
+    dbName: "jerney_db"
+
 
 #-------------------------------------------------------------------#
 ingress:

@@ -32,8 +32,8 @@ spec:
           
           env:
             - name: PGDATA 
-              value: /var/lib/postgresql/data/pgdata
-              
+              value: /data/pgdata
+
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
@@ -55,7 +55,7 @@ spec:
           # ─── DEVSECOPS BLOCK 3: VOLUMES & READ-ONLY BYPASSES ───
           volumeMounts:
             - name: postgres-storage              # Path inside container where Postgres writes data
-              mountPath: /var/lib/postgresql/data/pgdata  # The physical block disk from AWS EBS
+              mountPath: /data # The physical block disk from AWS EBS
             - name: pg-run-volume
               mountPath: /var/run/postgresql       # In-memory location for database lock/socket files
             - name: pg-tmp-volume

@@ -58,7 +58,9 @@ spec:
               mountPath: /tmp
 
           volumes:
-           
+            - name: postgres-storage
+              persistentVolumeClaim:
+                claimName: postgres-storage
             - name: pg-run-volume
               emptyDir: {}
             - name: pg-tmp-volume

@@ -67,8 +67,4 @@ spec:
       containers:
         - image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}}
 ---
-spec:
-  template:
-    spec:
-      containers:
-        - image: {{.Values.backend.image.repository}}:{{.Values.backend.image.tag}}
+

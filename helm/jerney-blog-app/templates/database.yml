@@ -77,7 +77,7 @@ spec:
           emptyDir: {}
           
           resources:
-           {{-toYaml .Values.postgres.resources | indent 12}}
+           {{- toYaml .Values.postgres.resources | indent 12}}
 
           readinessProbe:
             exec:

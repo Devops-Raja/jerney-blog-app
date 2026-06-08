@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: jerney
+  annotations:
+   {{- toYaml .Values.front_ingress.annotations | nindent 4 }}
+spec:
+  rules:
+    - {{- if .Values.front_ingress.host }}
+      host: {{ .Values.front_ingress.host | quote }}
+      {{- end }}
+      http:
+        paths:
+           {{- range .Values.front_ingress.paths }}
+           - path: {{ .path }}
+             pathType: Prefix
+             backend:
+               service:
+                 name: {{ .serviceName }}
+                 port:
+                   number: {{ .port }}
+           {{- end }}
+         

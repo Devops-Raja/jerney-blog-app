@@ -1,18 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jerney-ingress
-  namespace: jerney
+  name: argo-ingress
+  namespace: argocd
   annotations:
-   {{- toYaml .Values.ingress.annotations | nindent 4 }}
+   {{- toYaml .Values.argo_ingress.annotations | nindent 4 }}
 spec:
   rules:
-    - {{- if .Values.ingress.host }}
-      host: {{ .Values.ingress.host | quote }}
+    - {{- if .Values.argo_ingress.host }}
+      host: {{ .Values.argo_ingress.host | quote }}
       {{- end }}
       http:
         paths:
-           {{- range .Values.ingress.paths }}
+           {{- range .Values.argo_ingress.paths }}
            - path: {{ .path }}
              pathType: Prefix
              backend:

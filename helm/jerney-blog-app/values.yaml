@@ -67,7 +67,7 @@ postgres:
 
 
 #-------------------------------------------------------------------#
-ingress:
+front_ingress:
   className: "alb"
   host: "myjerneyapp007.com"
   annotations:
@@ -79,10 +79,20 @@ ingress:
     - path: "/"
       serviceName: "frontend-service"
       port: 80
+
+#-------------------------------------------------------------------#
+argo_ingress:
+  className: "alb"
+  host: "myjerneyapp007.com"
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/group.name: "shared-alb-group"
+  paths:
     - path: "/argocd"
       serviceName: "argocd-server"
       port: 80
-
 #-------------------------------------------------------------------#
 
 networkPolicy:

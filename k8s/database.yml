@@ -64,7 +64,7 @@ spec:
           # ─── DEVSECOPS BLOCK 3: VOLUMES & READ-ONLY BYPASSES ───
           volumeMounts:
             - name: postgres-storage
-              mountPath: /var/lib/postgresql/data  # The physical block disk from AWS EBS
+              mountPath: /data  # The physical block disk from AWS EBS
             - name: pg-run-volume
               mountPath: /var/run/postgresql       # In-memory location for database lock/socket files
             - name: pg-tmp-volume
@@ -88,15 +88,15 @@ spec:
               command: ["pg_isready", "-U", "$(POSTGRES_USER)", "-d", "$(POSTGRES_DB)"]
             initialDelaySeconds: 30
             periodSeconds: 20
-            volumes:
-              - name: pg-run-volume
-                emptyDir: {}
-              - name: pg-tmp-volume
-                emptyDir: {}
+      volumes:
+          - name: postgres-storage
+            persistentVolumeClaim:
+               claimName: postgres-storage
+          - name: pg-run-volume
+            emptyDir: {}
+          - name: pg-tmp-volume
+            emptyDir: {}
 
-            volumeMounts:
-              - name: postgres-storage
-                mountPath: /var/lib/postgresql/data 
        # Path inside container where Postgres writes data
   # ─── DYNAMIC STORAGE ARCHITECTURE ───#
 

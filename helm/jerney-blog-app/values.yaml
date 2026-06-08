@@ -101,7 +101,7 @@ argocd:
   namespace: "argocd"
   project: "default"
   repoURL: "https://github.com/Devops-Raja/jerney-blog-app.git"
-  targetRevision: "devops"
+  targetRevision: "main"   ##you can mention which branch argo to track main/dev/devops etc
   path: "helm/jerney-blog-app"
   destinationServer: "https://kubernetes.default.svc"
   targetNamespace: "jerney"

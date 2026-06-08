@@ -1,22 +1,21 @@
 backend:
- replicaCount: 2
- image:
-  repository: ram7800/jerney-backend
-  tag: b77
-
- resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 250m
-    memory: 256Mi
+  replicaCount: 2
+  image:
+    repository: ram7800/jerney-backend
+    tag: b79
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
 #----------------------------------------------------------#
 frontend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-frontend
-    tag: b77
+    tag: b79
   resources:
     limits:
       cpu: 200m
@@ -31,14 +30,11 @@ config:
   dbHost: "postgres-service"
   dbPort: "5432"
   dbName: "jerney_db"
-
 secret:
   DB_USER: "jerney_user"
   DB_PASSWORD: "jerney_pass_2026"
   DATABASE_URL: "postgres://jerney_user:jerney_pass_2026@postgres-service:5432/jerney_db"
-
   #-------------------------------------------------------------------#
-
 postgres:
   replicaCount: 1
   image:
@@ -64,8 +60,6 @@ postgres:
     dbHost: "postgres-service.jerney.svc.cluster.local"
     dbPort: "5432"
     dbName: "jerney_db"
-
-
 #-------------------------------------------------------------------#
 front_ingress:
   className: "alb"
@@ -79,7 +73,6 @@ front_ingress:
     - path: "/"
       serviceName: "frontend-service"
       port: 80
-
 #-------------------------------------------------------------------#
 argo_ingress:
   className: "alb"
@@ -101,7 +94,6 @@ networkPolicy:
   frontendApp: "jerney-frontend"
   backendApp: "jerney-backend"
   dbApp: "postgres"
-
 #-------------------------------------------------------------------#
 argocd:
   enabled: true

@@ -108,4 +108,4 @@ spec:
         storageClassName: "jerney-ebs-sc" # Binds directly to the StorageClass defined above
         resources:
           requests:
-            storage: 10Gi # Requested disk allocation
+            storage: 5Gi # Requested disk allocation

@@ -139,7 +139,7 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/jerney-backend:latest
 
   # ───────────────────────────────────────────────────────────
-  # STAGE 5: IaC SCAN (Kubernetes Manifest Validation)
+  # STAGE 5: IaC SCAN (Kubernetes Manifest Validation) terraform +k8
   # ───────────────────────────────────────────────────────────
   iac-security-scan:
     name: "Stage 5: Infrastructure as Code (IaC) Scan"
@@ -178,6 +178,15 @@ jobs:
           soft_fail: false
           skip_check: CKV_AWS_39,CKV_AWS_58  # Public EKS endpoint (intentional for dev)
           output_format: cli
+
+      - name: Run Checkov on Kubernetes manifests
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: k8s/
+          framework: kubernetes
+          soft_fail: true  # Soft fail for K8s (some checks may not apply)
+          output_format: cli
+
   # ───────────────────────────────────────────────────────────
   # STAGE 6: DEPLOY MANIFEST UPDATE (GitOps Commit Gate)
   # ───────────────────────────────────────────────────────────

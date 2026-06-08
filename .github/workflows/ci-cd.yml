@@ -1,14 +1,26 @@
-name: "Jerney Stack: Ultimate DevSecOps Pipeline"
+name: "Jerney Stack:   DevSecOps Pipeline"
 
 on:
   push:
     branches:
       - devops
       - main
+    paths:
+      - 'k8s/**'
+      - 'helm/**'
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/ci-cd.yml'
   pull_request:
     branches:
       - devops
       - main
+    paths:
+      - 'k8s/**'
+      - 'helm/**'
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/ci-cd.yml'
 
 permissions:
   contents: write

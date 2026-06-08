@@ -2,7 +2,7 @@ backend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-backend
-    tag: b84
+    tag: b85
   resources:
     limits:
       cpu: 500m
@@ -15,7 +15,7 @@ frontend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-frontend
-    tag: b84
+    tag: b85
   resources:
     limits:
       cpu: 200m

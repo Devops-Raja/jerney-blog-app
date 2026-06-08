@@ -6,7 +6,7 @@ provisioner: ebs.csi.eks.amazonaws.com
 parameters:
   type: gp3
   encrypted: "true"
-reclaimPolicy: Retain
+reclaimPolicy: Delete   ##auto delete when terraform destroy
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 

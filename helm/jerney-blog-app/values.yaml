@@ -2,7 +2,7 @@ backend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-backend
-    tag: b87
+    tag: b86
   resources:
     limits:
       cpu: 500m
@@ -15,7 +15,7 @@ frontend:
   replicaCount: 2
   image:
     repository: ram7800/jerney-frontend
-    tag: b87
+    tag: b86
   resources:
     limits:
       cpu: 200m
@@ -102,6 +102,7 @@ argocd:
   project: "default"
   repoURL: "https://github.com/Devops-Raja/jerney-blog-app.git"
   targetRevision: "main" ##you can mention which branch argo to track main/dev/devops etc
+  ### Everytime you change, you have to manual overid
   path: "helm/jerney-blog-app"
   destinationServer: "https://kubernetes.default.svc"
   targetNamespace: "jerney"

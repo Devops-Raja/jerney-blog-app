@@ -20,7 +20,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ram7800/jerney-backend:b77 # Update this to your Docker Hub username and image tag
+          image: ram7800/jerney-backend:b78 # Update this to your Docker Hub username and image tag
           command: ["node", "src/index.js"]
           ports:
             - containerPort: 5000
@@ -60,7 +60,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: jerney 
+  namespace: jerney
 spec:
   type: ClusterIP
   ports:
@@ -70,10 +70,10 @@ spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b77
+        - image: ram7800/jerney-backend:b78
 ---
 spec:
   template:
     spec:
       containers:
-        - image: ram7800/jerney-backend:b77
+        - image: ram7800/jerney-backend:b78

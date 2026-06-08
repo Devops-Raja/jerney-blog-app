@@ -89,6 +89,8 @@ jobs:
           file: ./frontend/Dockerfile
           load: true # Loads image directly into local Docker engine cache instead of pushing
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/jerney-frontend:local
+          build-args: |
+            CACHE_DATE=${{ github.run_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -99,6 +101,8 @@ jobs:
           file: ./backend/Dockerfile
           load: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/jerney-backend:local
+          build-args: |
+            CACHE_DATE=${{ github.run_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
